@@ -1,9 +1,11 @@
-import './App.css';
+import React from "react";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
-    <div className="App">
-      <h1>Hello</h1>
+    <div className="coming-soon cool-background">
+      <h1>Coming Soon!</h1>
     </div>
   );
 }
