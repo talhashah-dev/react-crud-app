@@ -1,11 +1,12 @@
 import React from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Create from "./components/Create";
 
 function App() {
   return (
-    <div className="coming-soon cool-background">
-      <h1>Coming Soon!</h1>
+    <div className="container">
+      <Create />
     </div>
   );
 }
