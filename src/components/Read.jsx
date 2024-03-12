@@ -1,19 +1,46 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function Read() {
-  const [apiData, setApiDate] = useState([]);
+  const [apiData, setApiData] = useState([]);
+  const [allUsers, setAllUsers] = useState();
 
   const getData = () => {
     axios
       .get("https://65ec22c80ddee626c9afa2b3.mockapi.io/crud")
       .then((response) => {
-        setApiDate(response.data);
+        setApiData(response.data);
+        setAllUsers(response.data.length);
       })
       .catch((error) => {
         console.log("Error", error);
       });
+  };
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`https://65ec22c80ddee626c9afa2b3.mockapi.io/crud/${id}`)
+          .then(() => {
+            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            getData();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    });
   };
 
   useEffect(() => {
@@ -22,43 +49,64 @@ function Read() {
 
   return (
     <>
-      <div className="row">
+      <div className="row mt-5">
         <div className="col-md-12">
-          <div className="mb-2 mt-2">
+          <h1>Employee Managment Software</h1>
+          <h6>All Employees: {allUsers}</h6>
+          <hr />
+          <div className="mb-2 mt-3">
             <Link to="/create">
-              <button className="btn btn-primary">Create New Data</button>
+              <button className="btn btn-primary">Add Employee</button>
             </Link>
+            
           </div>
-          <table className="table table-bordered table-striped table-hover">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>NAME</th>
-                <th>AGE</th>
-                <th>EMAIL</th>
-                <th>EDIT</th>
-                <th>DELETE</th>
-              </tr>
-            </thead>
-            <tbody>
-              {apiData.map((item) => {
-                return (
-                  <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>{item.name}</td>
-                    <td>{item.age}</td>
-                    <td>{item.email}</td>
-                    <td>
-                      <button className="btn btn-primary">EDIT</button>
-                    </td>
-                    <td>
-                      <button className="btn btn-danger">DELETE</button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          {apiData.length === 0 ? (
+            <div className="noData">
+              <h1>NO DATA FOUND!</h1>
+            </div>
+          ) : (
+            <table className="table table-bordered table-hover table-striped text-center justify-content-center">
+              <thead>
+                <tr>
+                  <th>Emp ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Age</th>
+                  <th>Email</th>
+                  <th>Department</th>
+                  <th colSpan="2">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {apiData.map((item) => {
+                  return (
+                    <tr key={item.id}>
+                      <td>{item.id}</td>
+                      <td>{item.firstName}</td>
+                      <td>{item.lastName}</td>
+                      <td>{item.age}</td>
+                      <td>{item.email}</td>
+                      <td>{item.depart}</td>
+                      <td>
+                        <button
+                          className="btn btn-outline-secondary me-2"
+                          onClick={() => handleEdit(item.id)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="btn btn-outline-danger"
+                          onClick={() => handleDelete(item.id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </>
