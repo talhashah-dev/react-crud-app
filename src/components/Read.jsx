@@ -90,7 +90,7 @@ function Read() {
                       <td>
                         <button
                           className="btn btn-outline-secondary me-2"
-                          onClick={() => handleEdit(item.id)}
+                        //   onClick={() => handleEdit(item.id)}
                         >
                           Edit
                         </button>
