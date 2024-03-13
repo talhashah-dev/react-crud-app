@@ -15,7 +15,11 @@ function Read() {
         setAllUsers(response.data.length);
       })
       .catch((error) => {
-        console.log("Error", error);
+        Swal.fire({
+            title: "Oops!",
+            text: `${error.message}`,
+            icon: "error"
+          })
       });
   };
 
@@ -33,15 +37,29 @@ function Read() {
         axios
           .delete(`https://65ec22c80ddee626c9afa2b3.mockapi.io/crud/${id}`)
           .then(() => {
-            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            Swal.fire("Deleted!", "Data has been deleted.", "success");
             getData();
           })
           .catch((error) => {
-            console.log(error);
+            Swal.fire({
+                title: "Oops!",
+                text: `${error.message}`,
+                icon: "error"
+              })
           });
       }
     });
   };
+
+  const setToLocalStorage = (id, firstName, lastName, age, email, depart) => {
+    localStorage.setItem("id", id)
+    localStorage.setItem("first_name", firstName)
+    localStorage.setItem("last_name", lastName)
+    localStorage.setItem("age", age)
+    localStorage.setItem("email", email)
+    localStorage.setItem("depart", depart)
+  }
+
 
   useEffect(() => {
     getData();
@@ -88,12 +106,14 @@ function Read() {
                       <td>{item.email}</td>
                       <td>{item.depart}</td>
                       <td>
+                        <Link to={"/edit"}>
                         <button
                           className="btn btn-outline-secondary me-2"
-                        //   onClick={() => handleEdit(item.id)}
-                        >
+                          onClick={() => setToLocalStorage(item.id, item.firstName, item.lastName, item.age, item.email, item.depart)}
+                          >
                           Edit
                         </button>
+                            </Link>
                         <button
                           className="btn btn-outline-danger"
                           onClick={() => handleDelete(item.id)}

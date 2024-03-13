@@ -1,64 +1,59 @@
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
 import Swal from "sweetalert2";
 
-function Create() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [age, setAge] = useState("");
-  const [email, setEmail] = useState("");
-  const [depart, setDepart] = useState("");
-  const navigate = useNavigate();
+function Edit() {
+    const navigate = useNavigate();
+    const [id , setId] = useState(0);
+    const [firstName , setFirstName] = useState("");
+    const [lastName , setLastName] = useState("");
+    const [age , setAge] = useState(0);
+    const [email , setEmail] = useState("");
+    const [depart , setDepart] = useState("");
 
-  const departmentOptions = [
-    { label: "Development", value: "Development" },
-    { label: "Testing", value: "Testing" },
-    { label: "Marketing", value: "Marketing" },
-    { label: "Human Resources", value: "Human Resources" },
-    { label: "Management", value: "Management" },
-  ];
+    const departmentOptions = [
+        { label: "Development", value: "Development" },
+        { label: "Testing", value: "Testing" },
+        { label: "Marketing", value: "Marketing" },
+        { label: "Human Resources", value: "Human Resources" },
+        { label: "Management", value: "Management" },
+      ];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post("https://65ec22c80ddee626c9afa2b3.mockapi.io/crud", {
-        firstName: firstName,
-        lastName: lastName,
-        age: age,
-        email: email,
-        depart: depart
-      })
-      .then(() => {
-        Swal.fire({
-          title: "Done!",
-          text: "Your Data has been submitted.",
-          icon: "success",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#3085d6",
-          confirmButtonText: "Go Home",
-          cancelButtonText: "Ok"
-        }).then((result) => {
-          if (result.isConfirmed) {
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        axios.put(`https://65ec22c80ddee626c9afa2b3.mockapi.io/crud/${id}`,{
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+            email: email,
+            depart: depart
+        }).then(() => {
             navigate("/");
-          }
-        });
-      }).catch((error) => {
-        Swal.fire({
-            title: "Oops!",
-            text: `${error.message}`,
-            icon: "error"
-          })
-      });
-  };
+        }).catch((error) => {
+            Swal.fire({
+                title: "Oops!",
+                text: `${error.message}`,
+                icon: "error"
+              })
+        })
+    }
+
+    useEffect(() => {
+        setId(localStorage.getItem("id"));
+        setFirstName(localStorage.getItem("first_name"));
+        setLastName(localStorage.getItem("last_name"));
+        setAge(localStorage.getItem("age"));
+        setEmail(localStorage.getItem("email"));
+        setDepart(localStorage.getItem("depart"));
+    }, [])
 
   return (
     <div className="row justify-content-center">
       <div className="col-md-4">
-        <div className="mt-3 p-3 text-center">
-          <h1>Add Employee</h1>
+      <div className="mt-3 p-3 text-center">
+          <h1>Update Data</h1>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group mb-2">
@@ -68,6 +63,7 @@ function Create() {
               placeholder="Ali"
               className="form-control mt-1"
               id="firstNameInp"
+              value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
               autoComplete="off"
@@ -80,6 +76,7 @@ function Create() {
               placeholder="Ahmed"
               className="form-control mt-1"
               id="lastNameInp"
+              value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               required
               autoComplete="off"
@@ -92,6 +89,7 @@ function Create() {
               placeholder="21"
               className="form-control mt-1"
               id="ageInp"
+              value={age}
               onChange={(e) => setAge(e.target.value)}
               required
               min="18"
@@ -105,6 +103,7 @@ function Create() {
               placeholder="ali@example.com"
               className="form-control mt-1"
               id="emailInp"
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="off"
@@ -130,7 +129,7 @@ function Create() {
           <div className="d-grid gap-2">
             <input
               type="submit"
-              value="Submit"
+              value="Update Date"
               className="btn btn-primary"
             />
             <input
@@ -138,14 +137,14 @@ function Create() {
               value="Return Home"
               className="btn btn-outline-secondary"
               onClick={() => {
-                navigate("/");
+                navigate("/")
               }}
             />
           </div>
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-export default Create;
+export default Edit
