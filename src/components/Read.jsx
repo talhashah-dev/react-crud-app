@@ -72,11 +72,11 @@ function Read() {
           <h1>Employee Managment Software</h1>
           <h6>All Employees: {allUsers}</h6>
           <hr />
-          <div className="mb-2 mt-3">
+          <div className="mb-2 mt-3 d-flex justify-content-between">
             <Link to="/create">
               <button className="btn btn-primary">Add Employee</button>
             </Link>
-            
+            <button type="button" className="btn btn-primary">Dark Mode</button>
           </div>
           {apiData.length === 0 ? (
             <div className="noData">
